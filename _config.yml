@@ -4,6 +4,7 @@ tagline:      Notes on Robotics & Deep Learning
 baseurl:      ""
 paginate:     1
 locale:       "en"
+url: liaopeiyuan.github.io
 
 # About/contact
 author:
