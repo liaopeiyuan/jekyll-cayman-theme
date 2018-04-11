@@ -1,6 +1,6 @@
 # Setup
-title:        Project or Site name
-tagline:      A responsive theme for your project on GitHub Pages
+title:        Alexander Liao's Blog
+tagline:      Notes on Robotics & Deep Learning
 baseurl:      ""
 paginate:     1
 locale:       "en"
