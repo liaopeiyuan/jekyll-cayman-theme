@@ -15,7 +15,7 @@ gems:
   - jekyll-paginate
 
 #Others
-markdown: kramdown
+markdown: redcarpet
 highlighter: rouge
 sass:
   sass_dir: _sass
