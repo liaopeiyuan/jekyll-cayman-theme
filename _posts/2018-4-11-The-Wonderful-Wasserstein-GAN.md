@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: post
 title:  "The Wonderful Wasserstein GAN"
-date:   2016-02-12 17:50:00
+date:   2018-4-11 18:28:00
 categories: main
+future: true
+published: true
+use_math: true
 ---
 
 *(This article is translated from Mr. Zheng Huabin‘s 《令人拍案叫绝的Wasserstein GAN》originally posted on Zhihu. The translator has already received Mr. Zheng's authorization for the publication of the translated version. For native speakers / those who are interested in reading the Chinese version, [here's the link.](https://zhuanlan.zhihu.com/p/25071913))*
@@ -176,12 +179,12 @@ Since the last two terms do not depend on the generative network G, so minimizin
  
 Which is really problematic. Intuitively, you are pulling $$P_r$$ towards $$P_g$$ while pushing $$P_g$$ away from $$P_g$$ two times harder, which totally doesn’t make sense. This ridicule is then (of course) demonstrated on the instability of gradient updates.
 
-Taking one step back, even the seemingly normal KL divergence term is, in fact, problematic as well. Recall that since KL divergence is asymmetric, $$KL(P_g||P_r)$$ means something different from $$KL(P_r||P_g)$$ (Ian Goodfellow provides a perfect example in his book [Deep Learning](http://www.deeplearningbook.org/), and I strongly recommend readers to check it out after finishing the article). Take the former for example:
+Taking one step back, even the seemingly normal KL divergence term is, in fact, problematic as well. Recall that since KL divergence is asymmetric, $$KL(P_g \parallel P_r)$$ means something different from $$KL(P_r \parallel P_g)$$  (Ian Goodfellow provides a perfect example in his book [Deep Learning](http://www.deeplearningbook.org/), and I strongly recommend readers to check it out after finishing the article). Take the former for example:
 
 *   When $$P_g(x)$$ approaches 0 and $$P_r(x)$$ approaches 1, $$P_g(x)\log\frac{P_g(x)}{P_r(x)} \rightarrow 0$$; no contributions whatsoever to the KL divergence
 *    When $$P_g(x)$$ approaches 1 and $$P_r(x)$$ approaches 0, $$P_g(x)\log\frac{P_g(x)}{P_r(x)} \rightarrow +\infty$$; massive contributions to the KL divergence
 
-In other words, $$KL(P_g||P_r)$$ is biased on how to punish these two errors produced above. The first one in layman’s words is “Generator cannot generate a real example,” which has almost no punishment on the network; The second one, however, that “generator generates a false example,” is being punished significantly by the network. **This discrepancy forced the generative network to produce repetitive but rather “safe” samples instead of a wider spectrum of diverse samples because the latter triggers the second punishment. This effect is often referred to as “collapse mode.” **
+In other words, $$KL(P_g \parallel P_r)$$ is biased on how to punish these two errors produced above. The first one in layman’s words is “Generator cannot generate a real example,” which has almost no punishment on the network; The second one, however, that “generator generates a false example,” is being punished significantly by the network. **This discrepancy forced the generative network to produce repetitive but rather “safe” samples instead of a wider spectrum of diverse samples because the latter triggers the second punishment. This effect is often referred to as “collapse mode.” **
 
 **Summary on part 1: When the original GAN obtains an (approximately) optimal discriminator, the first generator loss suffers from vanishing gradient while the second loss faces the menace of absurd optimization goal, unstable gradient, and mode collapse caused by biased punishments.**
 
@@ -196,7 +199,7 @@ The preliminaries of WGAN proposed a solution to the second problem, which is ad
 
 Thus, we can confidently train an optimal discriminator without worrying about the vanishing gradient. Referring again to *Equation 9*, the minimum discriminator loss of the two noisy distributions is
 
-$$\begin{split} \min L_D(P_{r+\epsilon},P_{g+\epsilon}) &= \mathbb{E}_{x \sim P_{r + \epsilon}} [\log D^*(x)] - \mathbb{E}_{x \sim P_{g + \epsilon}} [\log (1-D^*(x))] \\ &= 2\log2- 2JS(P_{r+\epsilon}||P_{g+\epsilon})\end{split}$$
+$$\begin{split} \min L_D(P_{r+\epsilon},P_{g+\epsilon}) &= \mathbb{E}_{x \sim P_{r + \epsilon}} [\log D^*(x)] - \mathbb{E}_{x \sim P_{g + \epsilon}} [\log (1-D^*(x))] \\ &= 2\log2- 2JS(P_{r+\epsilon}\parallel P_{g+\epsilon})\end{split}$$
  
 Of which $$P_{r+\epsilon}$$ and $$P_{g+\epsilon}$$ are the model distribution and the generative distribution after the introduction of noise. Thinking reversely, we can obtain the JS divergence between the two noisy distributions from the loss of the optimal discriminator, which is in a way the “distance” between them. “So now you mean that we can even indicate the progress of the training by discriminator loss? Is there really such a good thing?”
 
@@ -227,9 +230,11 @@ $$\begin{split} KL(P_1||P_2) &= \begin{cases} +\infty  &\text{if} &\theta \neq 0
 *(jump discontinuity)*
 
 $$\begin{split} JS(P_1||P_2) &= \begin{cases} \log2 &\text{if} &\theta \neq 0  \\  0 & \text{if} & \theta=0 \end{cases}  \end{split}$$
+
 *(jump discontinuity)*
 
 $$W(P_0,P_1)=|\theta|$$
+
 *(smooth)*
    
 While KL/JS divergences experience a huge jump, **Wasserstein distance is smooth and differentiable with respect to $$\theta$$**. If we would like to optimize this parameter by gradient descent, only the Wasserstein distance can provide useful information. Similarly, in a high-dimensional case, neither KL/JS divergence can provide information on distance, or could they work with gradient descent. 
@@ -260,9 +265,9 @@ Thus, Equation 13 means that as long as $$f$$’s Lipschitz constant no larger t
  $$K \cdot W(P_r,P_g) \approx \max_{w:||f_w||_L \leq K} \mathbb{E}_{x \sim P_r} [f_w(x)] -\mathbb{E}_{x \sim P_g} [f_w(x)] $$
  *(Equation 14)*
  
-**Now, the deep learning guy is going to be super excited to recognize something he/she’s been doing all along, cause we can replace the $$f_w$$ here by simply a generic neural network!** Since the approximative ability of neural networks is enormous, it is safe to assume that although the entire class of $$f_w$$’s cannot cover all possibilities of $$f$$, it still provides a good approximation to the $$\sup_{||f||_L \leq K}$$ term in *Equation 13$.
+**Now, the deep learning guy is going to be super excited to recognize something he/she’s been doing all along, cause we can replace the $$f_w$$ here by simply a generic neural network!** Since the approximative ability of neural networks is enormous, it is safe to assume that although the entire class of $$f_w$$’s cannot cover all possibilities of $$f$$, it still provides a good approximation to the $$\sup_{\parallel f \parallel_L \leq K}$$ term in *Equation 13$.
 
-Finally, we cannot forget that $$||f||_L$$  in *Equation 14* still needs to be smaller than $$K$$. Again, we don’t care what value it takes on, as long as it’s not positive infinity. The reason is that enlarging $$K$$ will only enlarge the gradient, while the direction of which will remain the same. So, the author added a simple procedure to ensure the value of $$K$$: cropping all parameters so that they reside in some range like.  Consequently, the partial derivative $$\frac{\partial f_w}{\partial x}$$ of an arbitrary input $$x$$ will also be restrained to some unknown range that is governed by an unknown constant $$K$$, achieving the Lipschitz continuous condition. In the actual implementation, we need to clip the parameters $$w$$ back to the range after each update.
+Finally, we cannot forget that $$\parallel f\parallel_L$$  in *Equation 14* still needs to be smaller than $$K$$. Again, we don’t care what value it takes on, as long as it’s not positive infinity. The reason is that enlarging $$K$$ will only enlarge the gradient, while the direction of which will remain the same. So, the author added a simple procedure to ensure the value of $$K$$: cropping all parameters so that they reside in some range like.  Consequently, the partial derivative $$\frac{\partial f_w}{\partial x}$$ of an arbitrary input $$x$$ will also be restrained to some unknown range that is governed by an unknown constant $$K$$, achieving the Lipschitz continuous condition. In the actual implementation, we need to clip the parameters $$w$$ back to the range after each update.
 
 **At this point, we can create a discriminative neural network that is parameterized by $w$ and has an affine function for the activation function in the last layer. By restricting elements in w to a specific range, we optimize**
  
@@ -311,7 +316,7 @@ Thirdly, no collapse mode was observed during all WGAN training sessions, to whi
 
 The last point of nuance, something that the original paper didn’t mention, is that the author claimed that the approximated Wasserstein distance could guide researchers to adjust hyperparameters of the network when compared to different sessions. I believe that one needs to be careful when doing such comparisons since the error of Wasserstein distance estimation differs from session to session. **The layers/nodes of the discriminator, the training epochs, there are really lots of doubts on how comparable the two sessions really are regarding the Wasserstein distance updates.**
 
-*(Someone in the comment section points out that **alteration on the hyperparameters of the discriminator will directly affect the Lipschitz constant $K$, which renders future sessions incomparable to the present and past ones.** This is something that one should really pay attention to when implementing WGAN. To this, I came up with a more engineering-wise and less elegant solution. Take the same generative/discriminative distribution with different discriminators; train them separately until convergence, and then look at the difference between the metric. This difference can be viewed as the ratio between the Lipschitz constants of the two sessions, which can be then used to correct the metrics in later sessions)*
+*(Someone in the comment section points out that **alteration on the hyperparameters of the discriminator will directly affect the Lipschitz constant $$K$$, which renders future sessions incomparable to the present and past ones.** This is something that one should really pay attention to when implementing WGAN. To this, I came up with a more engineering-wise and less elegant solution. Take the same generative/discriminative distribution with different discriminators; train them separately until convergence, and then look at the difference between the metric. This difference can be viewed as the ratio between the Lipschitz constants of the two sessions, which can be then used to correct the metrics in later sessions)*
 
 **Section 5: Conclusion**
 
