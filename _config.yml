@@ -7,8 +7,8 @@ locale:       "en"
 
 # About/contact
 author:
-  name:       Author name
-  url:        http://yourhomepage.com 
+  name:       Peiyuan (Alexander) Liao
+  url:        https://github.com/liaopeiyuan 
 
 # Gems
 gems:
