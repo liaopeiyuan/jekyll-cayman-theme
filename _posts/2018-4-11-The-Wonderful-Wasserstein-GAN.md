@@ -1,3 +1,10 @@
+---
+layout: default
+title:  "The Wonderful Wasserstein GAN"
+date:   2016-02-12 17:50:00
+categories: main
+---
+
 *(This article is translated from Mr. Zheng Huabin‘s 《令人拍案叫绝的Wasserstein GAN》originally posted on Zhihu. The translator has already received Mr. Zheng's authorization for the publication of the translated version. For native speakers / those who are interested in reading the Chinese version, [here's the link.](https://zhuanlan.zhihu.com/p/25071913))*
 
 While the researching GAN is becoming so popular that doing them starts to become somewhat cliché, a new paper posted on arXiv called [Wasserstein GAN](https://arxiv.org/abs/1701.07875) has sparked a huge discussion on the Machine Learning subreddit, to a point where even [Ian Goodfellow himself joined the talk](https://www.reddit.com/r/MachineLearning/comments/5qxoaz/r_170107875_wasserstein_gan/). So, what’s so unique about this new theory?
