@@ -5,7 +5,6 @@ date:   2018-4-11 18:28:00
 categories: main
 future: true
 published: true
-use_math: true
 ---
 
 *(This article is translated from Mr. Zheng Huabin‘s 《令人拍案叫绝的Wasserstein GAN》originally posted on Zhihu. The translator has already received Mr. Zheng's authorization for the publication of the translated version. For native speakers / those who are interested in reading the Chinese version, [here's the link.](https://zhuanlan.zhihu.com/p/25071913))*
