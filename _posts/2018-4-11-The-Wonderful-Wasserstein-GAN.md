@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title:  "The Wonderful Wasserstein GAN"
 date:   2018-4-11 18:28:00
 categories: main
