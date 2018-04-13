@@ -13,13 +13,12 @@ layout: default
       
       {{ content }}
 
-      </div>
-      </main>
-      {% if is_post %}{% include pagination.html %}{% endif %}
-    </div>
+      
 
     </section>
 
+    {% include pagination.html %}
+    
   </body>
 </html>
 
